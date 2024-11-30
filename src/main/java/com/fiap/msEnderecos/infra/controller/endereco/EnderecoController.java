@@ -3,6 +3,7 @@ package com.fiap.msEnderecos.infra.controller.endereco;
 import com.fiap.msEnderecos.app.usecases.endereco.ConsultarUmEndereco;
 import com.fiap.msEnderecos.app.usecases.endereco.ExcluirUmEndereco;
 import com.fiap.msEnderecos.app.usecases.endereco.RegistrarEndereco;
+import com.fiap.msEnderecos.app.usecases.endereco.ValidaUmEndereco;
 import com.fiap.msEnderecos.domain.entity.Endereco;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +14,13 @@ public class EnderecoController {
     private final ConsultarUmEndereco consultarUmEndereco;
     private final ExcluirUmEndereco excluirUmEndereco;
     private final RegistrarEndereco registrarEndereco;
+    private final ValidaUmEndereco validaUmEndereco;
 
-    public EnderecoController(ConsultarUmEndereco consultarUmEndereco, ExcluirUmEndereco excluirUmEndereco, RegistrarEndereco registrarEndereco) {
+    public EnderecoController(ConsultarUmEndereco consultarUmEndereco, ExcluirUmEndereco excluirUmEndereco, RegistrarEndereco registrarEndereco, ValidaUmEndereco validaUmEndereco) {
         this.consultarUmEndereco = consultarUmEndereco;
         this.excluirUmEndereco = excluirUmEndereco;
         this.registrarEndereco = registrarEndereco;
+        this.validaUmEndereco = validaUmEndereco;
     }
 
     @GetMapping("/{id}")
@@ -61,6 +64,11 @@ public class EnderecoController {
                 endereco.getLatitude(),
                 endereco.getLongitude());
 
+    }
+
+    @GetMapping("/consultar/{id}")
+    public Boolean validaEndereco(@PathVariable Long id){
+        return validaUmEndereco.validaEndereco(id);
     }
 
 }
