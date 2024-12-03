@@ -1,13 +1,7 @@
 package com.fiap.msEnderecos.config;
 
-import com.fiap.msEnderecos.app.gateways.endereco.ConsultarUmEnderecoInterface;
-import com.fiap.msEnderecos.app.gateways.endereco.ExcluirUmEnderecoInterface;
-import com.fiap.msEnderecos.app.gateways.endereco.RegistrarEnderecoInterface;
-import com.fiap.msEnderecos.app.gateways.endereco.ValidaUmEnderecoInterface;
-import com.fiap.msEnderecos.app.usecases.endereco.ConsultarUmEndereco;
-import com.fiap.msEnderecos.app.usecases.endereco.ExcluirUmEndereco;
-import com.fiap.msEnderecos.app.usecases.endereco.RegistrarEndereco;
-import com.fiap.msEnderecos.app.usecases.endereco.ValidaUmEndereco;
+import com.fiap.msEnderecos.app.gateways.endereco.*;
+import com.fiap.msEnderecos.app.usecases.endereco.*;
 import com.fiap.msEnderecos.infra.gateways.endereco.EnderecoMapper;
 import com.fiap.msEnderecos.infra.gateways.endereco.RepositorioDeEnderecoJPA;
 import com.fiap.msEnderecos.infra.persistence.endereco.EnderecoRepository;
@@ -45,5 +39,10 @@ public class EnderecoConfig {
     @Bean
     EnderecoMapper enderecoMapper(){
         return new EnderecoMapper();
+    }
+
+    @Bean
+    ListarEnderecos listarEnderecos(ListarEnderecosInterface listarEnderecosInterface) {
+        return new ListarEnderecos(listarEnderecosInterface);
     }
 }
