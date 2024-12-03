@@ -1,18 +1,19 @@
 package com.fiap.msEnderecos.infra.gateways.endereco;
 
-import com.fiap.msEnderecos.app.gateways.endereco.ConsultarUmEnderecoInterface;
-import com.fiap.msEnderecos.app.gateways.endereco.ExcluirUmEnderecoInterface;
-import com.fiap.msEnderecos.app.gateways.endereco.RegistrarEnderecoInterface;
-import com.fiap.msEnderecos.app.gateways.endereco.ValidaUmEnderecoInterface;
+import com.fiap.msEnderecos.app.gateways.endereco.*;
 import com.fiap.msEnderecos.domain.entity.Endereco;
 import com.fiap.msEnderecos.infra.persistence.endereco.EnderecoEntity;
 import com.fiap.msEnderecos.infra.persistence.endereco.EnderecoRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RepositorioDeEnderecoJPA implements
         ConsultarUmEnderecoInterface,
         ExcluirUmEnderecoInterface,
         RegistrarEnderecoInterface,
-        ValidaUmEnderecoInterface {
+        ValidaUmEnderecoInterface,
+        ListarEnderecosInterface {
 
     private final EnderecoRepository repository;
     private final EnderecoMapper mapper;
@@ -47,5 +48,13 @@ public class RepositorioDeEnderecoJPA implements
                 new IllegalArgumentException("Endereco Não Encontrado"));
 
         return true;
+    }
+
+    @Override
+    public List<Endereco> listarTodos() {
+        List<EnderecoEntity> entities = repository.findAll();
+        return entities.stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
     }
 }

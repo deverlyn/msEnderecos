@@ -1,13 +1,13 @@
 package com.fiap.msEnderecos.infra.controller.endereco;
 
-import com.fiap.msEnderecos.app.usecases.endereco.ConsultarUmEndereco;
-import com.fiap.msEnderecos.app.usecases.endereco.ExcluirUmEndereco;
-import com.fiap.msEnderecos.app.usecases.endereco.RegistrarEndereco;
-import com.fiap.msEnderecos.app.usecases.endereco.ValidaUmEndereco;
+import com.fiap.msEnderecos.app.usecases.endereco.*;
 import com.fiap.msEnderecos.domain.entity.Endereco;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/endereco")
@@ -19,11 +19,14 @@ public class EnderecoController {
     private final RegistrarEndereco registrarEndereco;
     private final ValidaUmEndereco validaUmEndereco;
 
-    public EnderecoController(ConsultarUmEndereco consultarUmEndereco, ExcluirUmEndereco excluirUmEndereco, RegistrarEndereco registrarEndereco, ValidaUmEndereco validaUmEndereco) {
+    private final ListarEnderecos listarTodosEnderecos;
+
+    public EnderecoController(ConsultarUmEndereco consultarUmEndereco, ExcluirUmEndereco excluirUmEndereco, RegistrarEndereco registrarEndereco, ValidaUmEndereco validaUmEndereco, ListarEnderecos listarTodosEnderecos) {
         this.consultarUmEndereco = consultarUmEndereco;
         this.excluirUmEndereco = excluirUmEndereco;
         this.registrarEndereco = registrarEndereco;
         this.validaUmEndereco = validaUmEndereco;
+        this.listarTodosEnderecos = listarTodosEnderecos;
     }
 
     @GetMapping("/{id}")
@@ -77,5 +80,21 @@ public class EnderecoController {
     public Boolean validaEndereco(@PathVariable Long id){
         return validaUmEndereco.validaEndereco(id);
     }
-
+    @GetMapping
+    @Operation(summary = "Listar todos os Endereços", description = "Lista todos os endereços cadastrados.")
+    public List<EnderecoDTO> listarTodosEnderecos() {
+        List<Endereco> enderecos = listarTodosEnderecos.listarTodos();
+        return enderecos.stream()
+                .map(endereco -> new EnderecoDTO(
+                        endereco.getId(),
+                        endereco.getLogradouro(),
+                        endereco.getNumero(),
+                        endereco.getBairro(),
+                        endereco.getCidade(),
+                        endereco.getCep(),
+                        endereco.getLatitude(),
+                        endereco.getLongitude()))
+                .collect(Collectors.toList());
+    }
 }
+

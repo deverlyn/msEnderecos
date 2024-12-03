@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -85,5 +87,22 @@ public class RepositorioDeEnderecoJPATest {
 
         assertTrue(result);
         verify(repository).findById(id);
+    }
+    @Test
+    void testListarTodos() {
+        EnderecoEntity entity1 = new EnderecoEntity();
+        EnderecoEntity entity2 = new EnderecoEntity();
+        Endereco endereco1 = new Endereco();
+        Endereco endereco2 = new Endereco();
+
+        when(repository.findAll()).thenReturn(Arrays.asList(entity1, entity2));
+        when(mapper.toDomain(entity1)).thenReturn(endereco1);
+        when(mapper.toDomain(entity2)).thenReturn(endereco2);
+
+        List<Endereco> result = repositorioDeEnderecoJPA.listarTodos();
+
+        assertEquals(2, result.size());
+        assertEquals(endereco1, result.get(0));
+        assertEquals(endereco2, result.get(1));
     }
 }
